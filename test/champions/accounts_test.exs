@@ -506,4 +506,22 @@ defmodule Champions.AccountsTest do
       refute inspect(%User{password: "123456"}) =~ "password: \"123456\""
     end
   end
+
+  describe "change_user_points/2" do
+    test "accepts non-negative integers" do
+      assert %Ecto.Changeset{} =
+               changeset = Account.change_user_points(%User{}, %{"points" => -1})
+
+      refute changeset.valid?
+
+      assert %Ecto.Changeset{} = changeset = Account.change_user_points(%User{}, %{"points" => 0})
+
+      assert changeset.valid?
+
+      assert %Ecto.Changeset{} =
+               changeset = Account.change_user_points(%User{}, %{"points" => 10})
+
+      assert changeset.valid?
+    end
+  end
 end
